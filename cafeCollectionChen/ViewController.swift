@@ -16,6 +16,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var displayOutlet: UILabel!
     
     @IBOutlet weak var cartOutlet: UILabel!
+    var x = false
     var menu = ""
     var cartText = ""
     var itemArray: [String] = ["food1","food2","food3","food4","food5"]
@@ -28,7 +29,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         quantityTextField.delegate = self
         itemTextField.delegate = self
-        
+        x = true
         //include a way to ignore case sensitivity when searching
         for i in 0...(itemArray.count-1){
             menu += "\(itemArray[i]), \(priceArray[i]) \n"
@@ -39,15 +40,26 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func buttonAction(_ sender: UIButton) {
         errorLabel.text = ""
-        var item = "something"
+        var item = ""
         var quantity = (Int)(quantityTextField.text!)
         var quantity2 = 0
-        var x = false
+
+        if let q = quantity{
+            quantity2 = q
+        }
+        else{
+            errorLabel.text = "invalid quantity"
+        }
         
         for i in 0...(itemArray.count-1){
             if itemArray[i] == itemTextField.text{
                 item = itemTextField.text!
                 errorLabel.text = ""
+                if (x==true){
+                    cart[item] = quantity2
+                    x = false
+                    print("test")
+                }
                 break
 
             }
@@ -57,27 +69,34 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
 
         
-        if let q = quantity{
-            quantity2 = q
-        }
-        else{
-            errorLabel.text = "invalid quantity"
-        }
+        
+
+        
+        
         
         for (key, _) in cart {
             //does not check for duplicates, fix that
             if (key == item){
                 errorLabel.text = "Duplicate Item Found"
+                print("test3")
             }
             else{
-               cart["\(item)"] = quantity2
+                
+               cart[item] = quantity2
+                print("test2")
             }
         }
 
         for(key,value) in cart{
             cartText += "\(value) \(key) \n"
+            print("test1")
         }
         cartOutlet.text = cartText
+        
+        
+        
+        
+        
         
     quantityTextField.resignFirstResponder()
        itemTextField.resignFirstResponder()
